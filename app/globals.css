@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-montserrat: "Montserrat", sans-serif;
+}
+
+body {
+  @apply bg-white text-mb-navy antialiased;
+}
+
+/* Estilo geral: clean, corporativo, bastante espaço em branco,
+   sombras discretas, cantos levemente arredondados (seção 37). */
