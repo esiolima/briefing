@@ -6,8 +6,6 @@ export interface RequesterIdentity {
   name: string;
   areaId: string;
   areaName: string;
-  positionId: string;
-  positionName: string;
 }
 
 export function getRequesterIdentity(): RequesterIdentity | null {
