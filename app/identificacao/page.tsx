@@ -15,10 +15,8 @@ interface Option {
 export default function IdentificacaoPage() {
   const router = useRouter();
   const [areas, setAreas] = useState<Option[]>([]);
-  const [positions, setPositions] = useState<Option[]>([]);
   const [name, setName] = useState("");
   const [areaId, setAreaId] = useState("");
-  const [positionId, setPositionId] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -29,18 +27,6 @@ export default function IdentificacaoPage() {
       .catch(() => setError("load"));
   }, []);
 
-  useEffect(() => {
-    if (!areaId) {
-      setPositions([]);
-      setPositionId("");
-      return;
-    }
-    fetch(`/api/positions?areaId=${areaId}`)
-      .then((res) => res.json())
-      .then(setPositions)
-      .catch(() => setError("load"));
-  }, [areaId]);
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -49,7 +35,7 @@ export default function IdentificacaoPage() {
     const response = await fetch("/api/identify", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, areaId, positionId }),
+      body: JSON.stringify({ name, areaId }),
     });
 
     setLoading(false);
@@ -108,24 +94,6 @@ export default function IdentificacaoPage() {
               {areas.map((area) => (
                 <option key={area.id} value={area.id}>
                   {area.name}
-                </option>
-              ))}
-            </Select>
-          </div>
-
-          <div>
-            <Label htmlFor="position">Cargo</Label>
-            <Select
-              id="position"
-              value={positionId}
-              onChange={(e) => setPositionId(e.target.value)}
-              disabled={!areaId}
-              required
-            >
-              <option value="">Selecione</option>
-              {positions.map((position) => (
-                <option key={position.id} value={position.id}>
-                  {position.name}
                 </option>
               ))}
             </Select>
