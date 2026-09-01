@@ -22,7 +22,7 @@ export default function DashboardPage() {
               Olá, {identity!.name.split(" ")[0]}
             </h1>
             <p className="text-sm text-mb-gray-400">
-              {identity!.positionName} · {identity!.areaName}
+              {identity!.areaName}
             </p>
           </div>
           <Button disabled title="Disponível na próxima etapa">
