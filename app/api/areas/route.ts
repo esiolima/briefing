@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-
 export async function GET() {
   const { rows } = await db.query(
     `SELECT id, name FROM areas WHERE active = true ORDER BY name`,

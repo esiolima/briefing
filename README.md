@@ -1,4 +1,4 @@
-# Martins Briefing — Etapas 0, 1 e 2
+# Martins Briefing — Etapas 0, 1, 2 e 3
 
 Base do projeto (Etapa 0), identificação do solicitante e autenticação do
 admin (Etapa 1), e agora o banco de conhecimento com busca semântica
@@ -41,8 +41,31 @@ admin (Etapa 1), e agora o banco de conhecimento com busca semântica
   As telas de CRUD visual de tipos de demanda/campanhas/materiais ficam
   para a Etapa 7 — a API já existe e funciona por trás.
 
-Ainda **não** entram: wizard de criação de briefing, geração de perguntas
-complementares pela IA, respostas do Droni — isso é Etapa 3 em diante.
+**Etapa 3 — Wizard do solicitante (até o briefing revisado)**
+- Tabela `briefing_sessions` (`db/migrations/0003_briefing_sessions.sql`),
+  identificada por um `requester_token` anônimo (gerado no cookie de
+  identificação) — não por login, coerente com a decisão de que o
+  solicitante não se autentica.
+- `lib/ai/rules.ts`: regras fixas do sistema (seções 31 e 45), sempre
+  enviadas como `system prompt` e com prioridade sobre qualquer conteúdo
+  do banco de conhecimento ou do texto do solicitante.
+- `lib/ai/briefing-service.ts`: `interpretNeed` (interpreta a necessidade +
+  decide as perguntas complementares, seções 8-10) e `generateBriefing`
+  (consolida tudo em um briefing final, seção 16) — ambos isolados, só a
+  camada de API decide quando chamá-los.
+- Fluxo completo em `/briefings/novo`: **Necessidade** (texto livre) →
+  o backend consulta o banco de conhecimento (Etapa 2) **antes** de
+  chamar a IA → **Perguntas complementares** (opções rápidas ou texto,
+  pulada automaticamente se a IA já tiver o suficiente) → **Briefing**
+  editável campo a campo, com **Regenerar** e **Aprovar**.
+- Estados de loading amigáveis (seção 47) e erro com "Tentar novamente"
+  (seção 48) em cada chamada de IA.
+- Dashboard do solicitante agora lista os briefings reais (`/briefings/:id`
+  para visualizar) e o botão "Novo Briefing" já funciona.
+
+Ainda **não** entram: respostas prontas para o Droni em 1ª pessoa,
+referências, prompts de IA para referência visual, direcionamento para
+agência — isso é Etapa 4 em diante.
 
 ## Como rodar localmente
 
