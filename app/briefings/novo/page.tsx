@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { LoadingMessage, ErrorState } from "@/components/ui/StateMessages";
-import { ChatStyleQuestion, QuestionData } from "@/components/ui/ChatStyleQuestion";
+import { ChatStyleQuestion } from "@/components/ui/ChatStyleQuestion";
+import type { QuestionData } from "@/components/ui/ChatStyleQuestion";
 import { wizardSteps } from "@/lib/design-tokens";
 
 type Stage = "necessidade" | "carregando" | "perguntas" | "briefing" | "erro";
@@ -23,10 +24,11 @@ interface BriefingDraft {
   resumo?: string;
 }
 
-const LOADING_MESSAGES: Record<string, string> = {
-  interpretar: "Analisando sua necessidade e consultando o conhecimento disponível...",
+const LOADING_MESSAGES = {
+  interpretar:
+    "Analisando sua necessidade e consultando o conhecimento disponível...",
   gerar: "Organizando seu briefing...",
-};
+} as const;
 
 export default function NovoBriefingPage() {
   const router = useRouter();
@@ -41,10 +43,12 @@ export default function NovoBriefingPage() {
   const [briefing, setBriefing] = useState<BriefingDraft>({});
   const [approved, setApproved] = useState(false);
 
-  async function handleSubmitNeed(e: React.FormEvent) {
+  async function handleSubmitNeed(e: FormEvent) {
     e.preventDefault();
     setStage("carregando");
-    setLoadingMessage(LOADING_MESSAGES.interpretar);
+    setLoadingMessage(
+      LOADING_MESSAGES.interpretar ?? "Analisando sua necessidade..."
+    );
 
     try {
       const createRes = await fetch("/api/briefings", {
@@ -93,8 +97,8 @@ export default function NovoBriefingPage() {
   }
 
   async function handleGenerateBriefing(id: string) {
-    setStage("carregando");
-    setLoadingMessage(LOADING_MESSAGES.gerar);
+  setStage("carregando");
+  setLoadingMessage(LOADING_MESSAGES.gerar);
 
     try {
       const res = await fetch(`/api/briefings/${id}/generate-briefing`, {
