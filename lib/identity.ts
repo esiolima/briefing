@@ -3,9 +3,12 @@ import { cookies } from "next/headers";
 const COOKIE_NAME = "mb_identity";
 
 export interface RequesterIdentity {
+  token: string;
   name: string;
   areaId: string;
   areaName: string;
+  positionId: string;
+  positionName: string;
 }
 
 export function getRequesterIdentity(): RequesterIdentity | null {
